@@ -7,7 +7,6 @@ paths:
   /:
     get:
       summary: View personalized greeting
-      operationId: View a personalized greeting
       description: View a personalized greeting for the specified or guest user.
       parameters:
         - name: user
@@ -22,7 +21,6 @@ paths:
   /xml:
     get:
       summary: View XML response
-      operationId: View XML response
       description: View a sample response in XML format.
       responses:
         "200":
@@ -30,7 +28,6 @@ paths:
   /json:
     get:
       summary: View JSON response
-      operationId: View JSON response
       description: View a sample response in JSON format.
       responses:
         "200":
@@ -38,34 +35,25 @@ paths:
   /echo:
     get:
       summary: View request headers and body
-      operationId: View request headers and body
       description: View the request headers and body in JSON format.
       responses:
         "200":
           description: Success
     post:
       summary: Send request and view request headers and body
-      operationId: Send request and view request headers and body
-      description: "Send a request and view the resulting request headers and body in JSON
-        format.
-The request payload can be specified using one of the
-        following formats: application/json, application/x-www-form-urlencoded,
-        or application/xml."
+      description: "Send a request and view the resulting request headers and body in JSON format."
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/request-body"
-        description: Request payload in application/json,
-          application/x-www-form-urlencoded, or application/xml format.
-        required: true
+              type: object
       responses:
         "200":
           description: Success
   "/statuscode/{code}":
     get:
       summary: View status code and message
-      operationId: View status code and message
       description: View status code and message for the specified value.
       parameters:
         - name: code
@@ -86,5 +74,4 @@ components:
       properties:
         replace-me:
           type: object
-          description: Replace with request payload in application/json,
-            application/x-www-form-urlencoded, or application/xml format.
+          description: Replace with request payload in application/json or XML format.
