@@ -1,17 +1,138 @@
-swagger: "2.0"  # Change 'openapi' to 'swagger' for OpenAPI 2.0
+swagger: "2.0"
 info:
-  title: Mock Target API
-  version: 1.0.0
   description: OpenAPI Specification for the Apigee mock target service endpoint.
-host: mocktarget.apigee.net  # Add the 'host' field for OpenAPI 2.0 compatibility
-basePath: /  # Add 'basePath' field for OpenAPI 2.0 compatibility
+  version: 1.0.0
+  title: Mock Target API
+host: mocktarget.apigee.net
+basePath: /
 schemes:
   - http
   - https
 paths:
   /:
     get:
-      summary: Root endpoint
+      summary: View personalized greeting
+      operationId: viewPersonalizedGreeting
+      description: View a personalized greeting for the specified or guest user.
+      parameters:
+        - name: user
+          in: query
+          description: Your user name.
+          required: false
+          type: string
       responses:
         "200":
           description: Success
+  /help:
+    get:
+      summary: Get help
+      operationId: getHelp
+      description: View help information about available resources in HTML format.
+      responses:
+        "200":
+          description: Success
+  /user:
+    get:
+      summary: View personalized greeting
+      operationId: viewPersonalizedGreetingForUser
+      description: View a personalized greeting for the specified or guest user.
+      parameters:
+        - name: user
+          in: query
+          description: Your user name.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+  /iloveapis:
+    get:
+      summary: View API affirmation
+      operationId: viewAPIAffirmation
+      description: View API affirmation in HTML format.
+      responses:
+        "200":
+          description: Success
+  /ip:
+    get:
+      summary: View IP address
+      operationId: viewIPAddress
+      description: View the IP address of the client in JSON format.
+      responses:
+        "200":
+          description: Success
+  /xml:
+    get:
+      summary: View XML response
+      operationId: viewXMLResponse
+      description: View a sample response in XML format.
+      responses:
+        "200":
+          description: Success
+  /json:
+    get:
+      summary: View JSON response
+      operationId: viewJSONResponse
+      description: View a sample response in JSON format.
+      responses:
+        "200":
+          description: Success
+  /echo:
+    get:
+      summary: View request headers and body
+      operationId: viewRequestHeadersAndBody
+      description: View the request headers and body in JSON format.
+      responses:
+        "200":
+          description: Success
+    post:
+      summary: Send request and view request headers and body
+      operationId: sendRequestAndViewHeadersAndBody
+      description: |
+        Send a request and view the resulting request headers and body in JSON
+        format. The request payload can be specified using one of the
+        following formats: application/json, application/x-www-form-urlencoded,
+        or application/xml.
+      parameters:
+        - in: body
+          name: body
+          description: Request payload in application/json,
+            application/x-www-form-urlencoded, or application/xml format.
+          required: true
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        "200":
+          description: Success
+  /statuscode/{code}:
+    get:
+      summary: View status code and message
+      operationId: viewStatusCodeAndMessage
+      description: View status code and message for the specified value.
+      parameters:
+        - name: code
+          in: path
+          description: HTTP status code.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+  /auth:
+    get:
+      summary: Validate access using basic authentication
+      operationId: validateAccessUsingBasicAuth
+      description: Validate access using basic authentication.
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: Success
+definitions:
+  request-body:
+    type: object
+    additionalProperties: true
+securityDefinitions:
+  basicAuth:
+    type: basic
