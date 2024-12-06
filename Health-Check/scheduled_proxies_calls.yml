@@ -4,6 +4,7 @@ on:
   schedule:
     # Schedule to run every minute
     - cron: "*/1 * * * *"
+    workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   call-apigee:
