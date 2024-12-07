@@ -3,7 +3,7 @@ name: Scheduled Apigee Proxy Calls
 on:
   schedule:
     # Schedule to run every minute
-    - cron: "*/1 * * * *"
+    - cron: "* * * * *"
 
 jobs:
   call-apigee:
