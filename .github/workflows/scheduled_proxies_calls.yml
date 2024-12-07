@@ -1,36 +1,33 @@
-name: Scheduled Apigee Proxy Calls
+name: Simplified Apigee Proxy Calls
 
 on:
   schedule:
-    # Schedule to run every minute
+    # Run every minute
     - cron: "* * * * *"
+  workflow_dispatch: # Allow manual triggering
 
 jobs:
   call-apigee:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository (if needed)
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
       # Call first Apigee Proxy
       - name: Call Apigee Proxy 1
         run: |
-          curl -X GET "${{ vars.APIGEE_BASE_URL }}/west/v1/status-refresh" \
+          curl -X GET "https://api.dev.advana.540.co/west/v1/status-refresh" \
           -H "apikey: ${{ secrets.APIGEE_API_KEY }}" \
           -H "Content-Type: application/json"
 
       # Call second Apigee Proxy
       - name: Call Apigee Proxy 2
         run: |
-          curl -X GET "${{ vars.APIGEE_BASE_URL }}/es-test-contractawards/v1/status-refresh" \
+          curl -X GET "https://api.dev.advana.540.co/es-test-contractawards/v1/status-refresh" \
           -H "apikey: ${{ secrets.APIGEE_API_KEY }}" \
           -H "Content-Type: application/json"
 
       # Call third Apigee Proxy
       - name: Call Apigee Proxy 3
         run: |
-          curl -X GET "${{ vars.APIGEE_BASE_URL }}/advana/sandbox/v1/status-refresh" \
+          curl -X GET "https://api.dev.advana.540.co/advana/sandbox/v1/status-refresh" \
           -H "apikey: ${{ secrets.APIGEE_API_KEY }}" \
           -H "Content-Type: application/json"
