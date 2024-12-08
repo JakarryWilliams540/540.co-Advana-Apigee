@@ -2,9 +2,8 @@ name: Simplified Apigee Proxy Calls
 
 on:
   schedule:
-    # Run every minute
     - cron: "* * * * *"
-  workflow_dispatch: # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
   call-apigee:
