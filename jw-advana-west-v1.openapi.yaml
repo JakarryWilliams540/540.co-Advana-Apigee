@@ -1,0 +1,73 @@
+swagger: "2.0"
+info:
+  title: "Kanye West"
+  description: "This Proxy provides a gateway to the Kanye Rest API with API key validation. To retrieve random quotes attributed to Kanye West."
+  version: "1.0.0"
+host: "apigee.advana.540.co"
+basePath: "/west/v1"
+schemes:
+  - https
+paths:
+  /:
+    get:
+      summary: "Fetch a Kanye quote"
+      description: "Fetches a random quote from the Kanye Rest API."
+      produces:
+        - application/json
+      parameters:
+        - name: "apikey"
+          in: "query"
+          description: "API key for authorization"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "object"
+            properties:
+              quote:
+                type: "string"
+                example: "I still think I am the greatest."
+        401:
+          description: "Unauthorized - Invalid API key"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "object"
+                properties:
+                  developerMessage:
+                    type: "string"
+                    example: "Unauthorized"
+                  userMessage:
+                    type: "string"
+                    example: "Invalid API Key provided"
+                  errorCode:
+                    type: "string"
+                    example: "401"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "object"
+                properties:
+                  developerMessage:
+                    type: "string"
+                    example: "An unexpected error occurred on the server."
+                  userMessage:
+                    type: "string"
+                    example: "Something went wrong. Please try again later."
+                  errorCode:
+                    type: "string"
+                    example: "500"
+securityDefinitions:
+  apiKeyAuth:
+    type: "apiKey"
+    in: "query"
+    name: "apikey"
+
+security:
+  - apiKeyAuth: []
