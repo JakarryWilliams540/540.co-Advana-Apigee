@@ -1,0 +1,254 @@
+swagger: "2.0"
+info:
+  title: Meta Llama3-8b-Instruct (quantized)
+  description: >
+    Meta developed and released the Meta Llama 3 family of large language models (LLMs), a collection of pretrained and instruction tuned generative text models in 8 and 70B sizes. The Llama 3 instruction tuned models are optimized for dialogue use cases and outperform many of the available open source chat models on common industry benchmarks.
+  x-productOwnerName: Zachary Seymour
+  x-productOwnerEmail: zachary.a.seymour2.ctr@mail.mil
+  x-approvalRequired: true
+  x-approverName: Zachary Seymour
+  x-approverEmail: zachary.a.seymour2.ctr@mail.mil
+  x-poweredBy: Perceptor
+  version: 1.0.0
+host: api.advana.data.mil
+basePath: /
+schemes:
+  - https
+paths:
+  /models/v1/meta-llama/meta-llama-3-8b-instruct:
+    post:
+      description: Fine-tuned Instruction LLM
+      operationId: chatCompletion
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/BatchChatCompletionRequestRequest'
+      responses:
+        '200':
+          description: Inference succeeded
+          schema:
+            $ref: '#/definitions/BatchChatCompletionResponseResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorCollection'
+        '504':
+          description: Gateway Timeout Error
+          schema:
+            $ref: '#/definitions/ErrorCollection'
+definitions:
+  BatchChatCompletionRequestRequest:
+    title: BatchChatCompletionRequestRequest
+    required:
+      - data
+    type: object
+    properties:
+      data:
+        title: Data
+        type: array
+        items:
+          $ref: '#/definitions/ChatCompletionRequest'
+  BatchChatCompletionResponseResponse:
+    title: BatchChatCompletionResponseResponse
+    required:
+      - results
+    type: object
+    properties:
+      results:
+        title: Results
+        type: array
+        items:
+          $ref: '#/definitions/ChatCompletionResponse'
+  ChatCompletionChoice:
+    title: ChatCompletionChoice
+    required:
+      - index
+      - message
+      - finish_reason
+    type: object
+    properties:
+      index:
+        title: Index
+        type: integer
+        description: The index of the choice in the list of completions.
+        examples:
+          - 0
+      message:
+        $ref: '#/definitions/ChatCompletionMessage'
+        description: The generated message content, including its role and text.
+      finish_reason:
+        title: Finish Reason
+        type: string
+        description: Explains why the model stopped generating tokens.
+        examples:
+          - stop
+          - length
+          - content_filter
+  ChatCompletionMessage:
+    title: ChatCompletionMessage
+    description: A single message in a chat conversation.
+    required:
+      - role
+      - content
+    type: object
+    properties:
+      role:
+        $ref: '#/definitions/ChatMessageRole'
+        description: Specifies the role of the sender of the message.
+        examples:
+          - user
+      content:
+        title: Content
+        type: string
+        description: The text content of the message.
+        examples: 
+          - What is the weather like today?
+      name:
+        title: Name
+        type: string
+        description: An optional field representing the name of the sender, used when the sender needs identification in multi-user contexts.
+        examples:
+          - JohnDoe
+  ChatCompletionRequest:
+    title: ChatCompletionRequest
+    required:
+      - messages
+    type: object
+    properties:
+      messages:
+        title: Messages
+        type: array
+        items:
+          $ref: '#/definitions/ChatCompletionMessage'
+        description: A list of messages (each containing a role and content) to serve as the conversation context.
+      max_tokens:
+        title: Max Tokens
+        type: integer
+        description: The maximum number of tokens to generate in the response.
+        examples:
+          - 100
+      temperature:
+        title: Temperature
+        type: number
+        description: Controls randomness in the output. Higher value generates more diverse responses, while lower value makes responses more focused and deterministic.
+        examples:
+          - 0.7
+      top_p:
+        title: Top P
+        type: number
+        description: Implements nucleus sampling, where the model considers only the most probable token results up to a cumulative probability top_p.
+        example:
+          - 0.9
+      stop:
+        title: Stop
+        type: array
+        items:
+          type: string
+        description: A list of strings that specify where the model should stop generating further tokens.
+        examples:
+          - "\n\n"
+          - "User:"
+      presence_penalty:
+        title: Presence Penalty
+        type: number
+        description: Penalizes tokens based on their presence in the conversation so far, encouraging new topics. Values range from -2.0 to 2.0.
+        examples:
+          - 0.5
+      frequency_penalty:
+        title: Frequency Penalty
+        type: number
+        description: Penalizes tokens based on their frequency in the conversation, reducing repetition. Values range from -2.0 to 2.0.
+        examples:
+          - 0.5
+      logit_bias:
+        title: Logit Bias
+        type: object
+        additionalProperties:
+          type: integer
+        description: Adjusts the likelihood of specific tokens appearing. Each token is identified by its token ID, and the bias is an integer value.
+      user:
+        title: User
+        type: string
+        description: An optional identifier for the end user, useful for tracking or auditing.
+        examples:
+          - user_12345
+  ChatCompletionResponse:
+    title: ChatCompletionResponse
+    required:
+      - id
+      - object
+      - created
+      - model
+      - choices
+      - usage
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+      object:
+        title: Object
+        type: string
+      created:
+        title: Created
+        type: integer
+      model:
+        title: Model
+        type: string
+      choices:
+        title: Choices
+        type: array
+        items:
+          $ref: '#/definitions/ChatCompletionChoice'
+      usage:
+        $ref: '#/definitions/Usage'
+  ChatMessageRole:
+    title: ChatMessageRole
+    description: A string enumeration that defines the possible roles in a chat message. This is useful for structuring the conversation context.
+    enum:
+      - system
+      - user
+      - assistant
+    type: string
+  ErrorCollection:
+    title: ErrorCollection
+    required:
+      - statusCode
+      - errorMessage
+    type: object
+    properties:
+      statusCode:
+        title: Statuscode
+        type: integer
+      errorMessage:
+        title: Errormessage
+        type: string
+        description: The error message returned by the operation
+  Usage:
+    title: Usage
+    required:
+      - prompt_tokens
+      - completion_tokens
+      - total_tokens
+    type: object
+    properties:
+      prompt_tokens:
+        title: Prompt Tokens
+        type: integer
+        description: The number of tokens used for the input.
+        examples:
+          - 30
+      completion_tokens:
+        title: Completion Tokens
+        type: integer
+        description: The number of tokens used for the generated output.
+        examples:
+          - 20
+      total_tokens:
+        title: Total Tokens
+        type: integer
+        description: The total number of tokens used, combining prompt and completion tokens.
+        examples:
+          - 50
